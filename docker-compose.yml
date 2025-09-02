@@ -1,0 +1,16 @@
+version: "3.12"
+
+services:
+  jira-rag-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jira-rag-api
+    ports:
+      - "8800:8800"   # Map local port 8800 → container 8800
+    environment:
+      - FLASK_ENV=production
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - WEAVIATE_URL=${WEAVIATE_URL}
+      - WEAVIATE_API_KEY=${WEAVIATE_API_KEY}
+    restart: always
