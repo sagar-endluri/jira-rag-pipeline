@@ -4,7 +4,7 @@ from pydantic import BaseModel
 # from appjira.jira_fetcher import run_jira_pipeline
 from rag_engine import run_rag_query
 # from jira_fetcher import run_jira_pipeline
-from fetch_all import run_jira_pipeline
+from fetch_all import pipeline
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 import os
@@ -38,8 +38,8 @@ def rag_query(payload: QueryRequest):
 @app.get("/fetch-jira-data/")
 def fetch_jira_data():
     try:
-        result = run_jira_pipeline()
-        return result
+        pipeline.run_pipeline()
+        return {"status": "Pipeline executed successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     

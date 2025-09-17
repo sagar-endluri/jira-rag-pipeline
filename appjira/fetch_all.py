@@ -10,7 +10,7 @@ from weaviate_create_collections import combine_issues, upload_to_weaviate
 
 
 class JiraPipeline:
-    def __init__(self, env_path=".env", output_dir="board_project_data"):
+    def __init__(self, env_path="/Users/hemasagarendluri1996/jira-rag-pipeline/.env", output_dir="board_project_data"):
         # Load credentials
         load_dotenv(env_path)
         self.jira_url = os.getenv("JIRA_URL")
@@ -124,6 +124,6 @@ class JiraPipeline:
         upload_to_weaviate(combined_df)
 
 
-if __name__ == "__main__":
-    pipeline = JiraPipeline(env_path="/Users/hemasagarendluri1996/jira-rag-pipeline/.env")
-    pipeline.run_pipeline()
+# if __name__ == "__main__":
+#     pipeline = JiraPipeline(env_path="/Users/hemasagarendluri1996/jira-rag-pipeline/.env")
+    
