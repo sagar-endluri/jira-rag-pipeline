@@ -1,6 +1,7 @@
 import os
 import json
-from app.download_attachments import JiraAttachmentProcessor
+from download_attachments import JiraAttachmentProcessor
+# from appjira.download_attachments import JiraAttachmentProcessor
 from dateutil import parser as date_parser
 
 # === Helper to load JSON ===
@@ -88,27 +89,37 @@ def extract_issue_data(issue, attachments_folder, processor):
 def process_all_files(input_folder, output_folder, processor):
     os.makedirs(output_folder, exist_ok=True)
     all_files = get_all_json_files(input_folder)
+    print(f"Found {len(all_files)} JSON files to process.")
 
     for file_path in all_files:
+        print(f"Processing file: {file_path}")
         try:
             data = load_json(file_path)
-            issues = data.get("issues", [])
-            if not issues:
-                continue
 
-            project_name = issues[0].get("fields", {}).get("project", {}).get("name", "UnknownProject")
+            project_name = data.get("project", "UnknownProject")
             cleaned_issues = []
 
             filename_stem = os.path.basename(file_path).replace(".json", "")
             attachments_folder = os.path.join(output_folder, f"{filename_stem}_attachments")
 
-            for issue in issues:
-                cleaned = extract_issue_data(issue, attachments_folder, processor)
-                cleaned_issues.append(cleaned)
+            # ✅ Walk through boards → sprints → issues
+            for board in data.get("boards", []):
+                for sprint in board.get("sprints", []):
+                    issues = sprint.get("issues", [])
+                    print(f" - Found {len(issues)} issues in sprint {sprint.get('name')}.")
 
+                    for issue in issues:
+                        cleaned = extract_issue_data(issue, attachments_folder, processor)
+                        # Add sprint + board info to issue
+                        cleaned["board_id"] = board.get("id")
+                        cleaned["board_name"] = board.get("name")
+                        cleaned["sprint_id"] = sprint.get("id")
+                        cleaned["sprint_name"] = sprint.get("name")
+                        cleaned_issues.append(cleaned)
+
+            # ✅ Wrap up cleaned data
             output_data = {
                 "project_name": project_name,
-                "maxResults": len(cleaned_issues),
                 "total": len(cleaned_issues),
                 "issues": cleaned_issues
             }
@@ -124,10 +135,11 @@ def process_all_files(input_folder, output_folder, processor):
         except Exception as e:
             print(f"❌ Error in {file_path}: {e}")
 
+
 # === Run the script ===
-if __name__ == "__main__":
-    processor = JiraAttachmentProcessor()
-    input_folder = "board_project_data"          # your input path here
-    output_folder = "board_project_cleaned"      # your output path here
-    process_all_files(input_folder, output_folder, processor)
+# if __name__ == "__main__":
+#     processor = JiraAttachmentProcessor()
+#     input_folder = "board_project_data"          # your input path here
+#     output_folder = "board_project_cleaned"      # your output path here
+#     process_all_files(input_folder, output_folder, processor)
     

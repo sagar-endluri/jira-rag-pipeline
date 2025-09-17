@@ -7,7 +7,7 @@ from langchain.embeddings import OpenAIEmbeddings
 # from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 # 🛠️ Step 1: Load environment variables
-load_dotenv(".env")
+load_dotenv("/Users/hemasagarendluri1996/jira-rag-pipeline/.env")
 WEAVIATE_URL = os.getenv("WEAVIATE_URL")
 WEAVIATE_API_KEY = os.getenv("WEAVIATE_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

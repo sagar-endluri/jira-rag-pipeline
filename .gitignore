@@ -1,0 +1,15 @@
+# Ignore virtual environment
+.venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore environment files
+.env
+
+# Ignore project data exports (optional, if you don’t want JSON dumps in repo)
+project_export.json
+*.log

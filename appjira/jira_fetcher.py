@@ -4,14 +4,14 @@ import hashlib
 import requests
 from requests.auth import HTTPBasicAuth
 from dotenv import load_dotenv
-from app.dynamic_cleaning_agentic import process_all_files
-from app.download_attachments import JiraAttachmentProcessor
-from app.weaviate_create_collections import combine_issues
+from dynamic_cleaning_agentic import process_all_files
+from download_attachments import JiraAttachmentProcessor
+from weaviate_create_collections import combine_issues
 # Load env
 load_dotenv("/Users/hemasagarendluri1996/Jira_RAG/.env")
-jira_url = os.getenv("jira_url")
-jira_api_token = os.getenv("jira_api_token")
-user_email = os.getenv("user_email")
+jira_url = os.getenv("JIRA_URL") or os.getenv("JIRA_URL")
+jira_api_token = os.getenv("JIRA_API_TOKEN") or os.getenv("jira_api_token")
+user_email = os.getenv("USER_EMAIL") or os.getenv("user_email")
 
 auth = HTTPBasicAuth(user_email, jira_api_token)#"ATATT3xFfGF0hfORXaw3PFI1__5nKfH6fMc7F2oaMZm7Y7sFJ1K-Ip-vAe38Mpi52exFIf9qJQXTRenVv2k_gO02EYpji9pJysD4uA6Ucyca6lyZDJbdk2dL4c58Mf--Iq8LJTjeVTCNtvAKGiLc6H-3rNblZOt1LFPTqU7ERxEPGbOCBbbRpOU=4128C04E")
 headers = {"Accept": "application/json"}
@@ -100,6 +100,7 @@ def run_jira_pipeline():
     # with open(os.path.join(output_path, "project_summary.json"), "w", encoding="utf-8") as f:
     #     json.dump(project_summary, f, indent=2, ensure_ascii=False)
     return json_all_issues
+# run_jira_pipeline()
 # {
 #         "status": "Success",
 #         "updates": json_all_issues

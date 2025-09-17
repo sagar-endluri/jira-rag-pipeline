@@ -13,9 +13,9 @@ from PIL import Image
 class JiraAttachmentProcessor:
     def __init__(self):
         load_dotenv(".env")
-        self.jira_url = os.getenv("jira_url")
-        self.jira_api_token = os.getenv("jira_api_token")
-        self.user_email = os.getenv("user_email")
+        self.jira_url = os.getenv("JIRA_URL") or os.getenv("jira_url")
+        self.jira_api_token = os.getenv("JIRA_API_TOKEN") or os.getenv("jira_api_token")
+        self.user_email = os.getenv("USER_EMAIL") or os.getenv("user_email")
         self.api_key = os.getenv("OPENAI_API_KEY")
         os.environ["OPENAI_API_KEY"] = self.api_key
         self.client = OpenAI(api_key=self.api_key)
