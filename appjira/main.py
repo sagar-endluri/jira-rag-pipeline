@@ -54,45 +54,11 @@ def fetch_jira_data():
 
 
 
-WEBHOOK_LOG_FILE = "webhook_events.json"
-
-@app.post("/webhook/")
+@app.post("/")
 async def webhook_listener(request: Request):
-    try:
-        # Get raw payload (bytes → string → dict)
-        payload_bytes = await request.body()
-        payload_str = payload_bytes.decode("utf-8", errors="replace")
-
-        try:
-            issue_payload = json.loads(payload_str)
-        except json.JSONDecodeError:
-            raise HTTPException(status_code=400, detail="Invalid JSON payload")
-
-        # Add timestamp for tracking
-        event_with_meta = {
-            "timestamp": datetime.utcnow().isoformat(),
-            "payload": issue_payload
-        }
-
-        # === Save to JSON file ===
-        if os.path.exists(WEBHOOK_LOG_FILE):
-            with open(WEBHOOK_LOG_FILE, "r", encoding="utf-8") as f:
-                existing_data = json.load(f)
-        else:
-            existing_data = []
-
-        existing_data.append(event_with_meta)
-
-        with open(WEBHOOK_LOG_FILE, "w", encoding="utf-8") as f:
-            json.dump(existing_data, f, indent=2, ensure_ascii=False)
-
-        # === Return response to Postman ===
-        return {
-            "status": "ok",
-            "message": "Webhook event stored successfully",
-            "event_preview": issue_payload.get("issue", {}).get("key", "No issue key"),
-            "total_events_stored": len(existing_data)
-        }
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    # Get the raw payload (bytes)
+    payload_bytes = await request.body()
+    # Decode to string for printing (assumes utf-8, which is typical for webhooks)
+    payload_str = payload_bytes.decode('utf-8', errors='replace')
+    print("🔔 Raw payload received:", payload_str)
+    return {"status": "ok", "received": bool(payload_str)}
