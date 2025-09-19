@@ -52,8 +52,6 @@ def fetch_jira_data():
     
 
 
-
-
 @app.post("/")
 async def webhook_listener(request: Request):
     # Get the raw payload (bytes)
